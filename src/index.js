@@ -2,7 +2,7 @@ import React, { Component} from 'react';
 import { render } from 'react-dom';
 import App from './App';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
-import ProductsPage from './ProductsPage'; 
+import ProductsPage from './components/ProductsPage'; 
 import Home from './Home';
 
 
