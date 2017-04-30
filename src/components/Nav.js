@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import ProductService from '../services/ProductService';
+import AuthService from '../services/AuthService';
 
 
 const _Nav = ({ numberOfProducts } )=> {
@@ -9,6 +10,8 @@ const _Nav = ({ numberOfProducts } )=> {
       <Link to='/'>Home</Link>
       { ' | ' }
       <Link to='/products'>Products ({ numberOfProducts})</Link>
+      { ' | ' }
+      <Link to='/login'>Login</Link>
     </div>
   );
 };
@@ -19,6 +22,9 @@ class Nav extends Component{
     this.state = { numberOfProducts: 0 };
   }
   componentDidMount(){
+    AuthService.exchangeTokenForUser()
+      .then( user => console.log(user));
+
     ProductService.getProducts()
       .then( products => this.setState({ numberOfProducts: products.length }));
 
