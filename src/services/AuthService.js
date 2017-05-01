@@ -1,7 +1,9 @@
 import axios from 'axios';
+import PubSubService from '../services/PubSubService';
 
 
 let _userPromise;
+
 const exchangeTokenForUser = ()=> {
   const token = localStorage.getItem('token');
   if(token){
@@ -22,6 +24,10 @@ const attemptLogin = (credentials)=> {
     .then(response => response.data)
     .then(({ token })=> localStorage.setItem('token', token))
     .then(()=> exchangeTokenForUser())
+    .then( user => {
+      PubSubService.publish('LOGIN', user);
+      return user;
+    })
     .catch((er)=> {
       localStorage.removeItem('token');
       throw er;

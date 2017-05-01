@@ -5,7 +5,7 @@ import AuthService from '../services/AuthService.js';
 
 const Login = ({ name, password, onChange, attemptLogin, error } )=> {
   return (
-    <form onSubmit={ attemptLogin }>
+    <form onSubmit={ attemptLogin } className='well'>
       {
         error ? (
           <div className='alert alert-warning'>Bad username/password</div>
@@ -17,7 +17,7 @@ const Login = ({ name, password, onChange, attemptLogin, error } )=> {
       <div className='form-group'>
         <input value={ password } className='form-control' name='password' onChange={ onChange }/>
       </div>
-      <button className='btn btn-primary'>Login</button>
+      <button className='btn btn-primary' disabled={ !name || !password}>Login</button>
     </form>
   );
 };

@@ -2,16 +2,23 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import ProductService from '../services/ProductService';
 import AuthService from '../services/AuthService';
+import PubSubService from '../services/PubSubService';
 
 
-const _Nav = ({ numberOfProducts } )=> {
+const _Nav = ({ numberOfProducts, user, logout } )=> {
   return (
     <div className='container'>
       <Link to='/'>Home</Link>
       { ' | ' }
       <Link to='/products'>Products ({ numberOfProducts})</Link>
       { ' | ' }
-      <Link to='/login'>Login</Link>
+      {
+        !user ? (
+          <Link to='/login'>Login</Link>
+        ) : (
+          <a onClick={ logout }>Logout ({ user.name })</a>
+        )
+      }
     </div>
   );
 };
@@ -19,20 +26,27 @@ const _Nav = ({ numberOfProducts } )=> {
 class Nav extends Component{
   constructor(){
     super();
-    this.state = { numberOfProducts: 0 };
+    this.state = { numberOfProducts: 0, user: null };
+    this.logout = this.logout.bind(this);
+  }
+  logout(){
+    AuthService.logout()
+      .then( user => this.setState({ user: null }));
   }
   componentDidMount(){
     AuthService.exchangeTokenForUser()
-      .then( user => console.log(user));
+      .then( user => this.setState({ user }));
 
     ProductService.getProducts()
       .then( products => this.setState({ numberOfProducts: products.length }));
 
+    this.unsubscribe = PubSubService.subscribe({ type: 'LOGIN', fn: ( user ) => this.setState({ user }) }); 
+
   }
   render(){
-    const { numberOfProducts } = this.state;
+    const { numberOfProducts, user } = this.state;
     return (
-      <_Nav numberOfProducts={ numberOfProducts}></_Nav>
+      <_Nav numberOfProducts={ numberOfProducts } user={ user } logout={ this.logout }></_Nav>
     );
   }
 }
