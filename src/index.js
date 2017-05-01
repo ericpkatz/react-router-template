@@ -6,6 +6,7 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import ProductsPage from './components/ProductsPage'; 
 import LoginPage from './components/LoginPage'; 
 import Home from './components/HomePage';
+import SettingsPage from './components/SettingsPage';
 
 
 
@@ -17,6 +18,7 @@ const routes = (
       <IndexRoute component={ Home } />
       <Route path='products' component={ProductsPage} />
       <Route path='login' component={LoginPage} />
+      <Route path='settings' component={SettingsPage} />
     </Route>
   </Router>
 );

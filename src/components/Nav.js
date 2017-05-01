@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import { Link, hashHistory } from 'react-router';
 import ProductService from '../services/ProductService';
 import AuthService from '../services/AuthService';
 import PubSubService from '../services/PubSubService';
@@ -16,7 +16,11 @@ const _Nav = ({ numberOfProducts, user, logout } )=> {
         !user ? (
           <Link to='/login'>Login</Link>
         ) : (
-          <a onClick={ logout }>Logout ({ user.name })</a>
+          <span>
+            <a onClick={ logout }>Logout ({ user.name })</a>
+            { ' | ' }
+            <Link to='/settings'>Settings</Link>
+          </span>
         )
       }
     </div>
@@ -31,7 +35,8 @@ class Nav extends Component{
   }
   logout(){
     AuthService.logout()
-      .then( user => this.setState({ user: null }));
+      .then( user => this.setState({ user: null }))
+      .then( ()=> hashHistory.push('/'));
   }
   componentDidMount(){
     AuthService.exchangeTokenForUser()

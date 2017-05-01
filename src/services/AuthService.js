@@ -34,13 +34,26 @@ const attemptLogin = (credentials)=> {
     });
 };
 
+const updateUser = (credentials)=> {
+  const token = localStorage.getItem('token');
+  return axios.put(`/api/auth/${token}`, credentials)
+    .then(()=> _userPromise = null)
+    .then(()=> exchangeTokenForUser())
+    .then( user => {
+      PubSubService.publish('LOGIN', user);
+      return user;
+    });
+};
+
 const logout = ()=> {
   localStorage.removeItem('token');
+  _userPromise = null;
   return Promise.resolve();
 }
 
 export default {
   attemptLogin,
   exchangeTokenForUser,
-  logout
+  logout,
+  updateUser
 };
